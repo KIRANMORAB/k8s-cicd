@@ -6,7 +6,7 @@ This repository contains the **CI/CD pipeline** for building, testing, scanning,
 
 ## 🏗️ Architecture
 
-![Application CI/CD Architecture](docs/app-architecture.png)
+![Application CI/CD Architecture](docs/architecture.png)
 
 ---
 
