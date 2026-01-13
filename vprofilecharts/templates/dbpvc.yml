@@ -4,8 +4,9 @@ metadata:
   name: db-pv-claim
   labels:
     app: vprodb
+    app.kubernetes.io/managed-by: Helm
 spec:
-  storageClassName: gp2
+  storageClassName: gp2          # In-tree AWS EBS provisioner
   accessModes:
     - ReadWriteOnce
   resources:
