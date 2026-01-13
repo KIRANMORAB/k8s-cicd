@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: db-pv-claim   # PVC name
+  name: db-pv-claim
   labels:
     app: vprodb
 spec:
-  storageClassName: default # asks Kubernetes to use the "default" StorageClass
+  storageClassName: gp3
   accessModes:
-    - ReadWriteOnce           # one node can mount it read/write at a time
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi            # asking for 2 GiB of storage
+      storage: 2Gi
