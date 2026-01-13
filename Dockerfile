@@ -1,13 +1,25 @@
-FROM openjdk:11 AS BUILD_IMAGE
-RUN apt update && apt install maven -y
-COPY ./ vprofile-project
-RUN cd vprofile-project &&  mvn install 
+# -------- BUILD STAGE --------
+FROM eclipse-temurin:11-jdk AS build_image
 
+WORKDIR /vprofile-project
+
+RUN apt-get update && apt-get install -y maven
+
+COPY . .
+RUN mvn clean install -DskipTests
+
+
+# -------- RUNTIME STAGE --------
 FROM tomcat:9-jre11
-LABEL "Project"="Vprofileeks"
-LABEL "Author"="kiran"
+
+LABEL Project="Vprofileeks"
+LABEL Author="kiran"
+
 RUN rm -rf /usr/local/tomcat/webapps/*
-COPY --from=BUILD_IMAGE vprofile-project/target/vprofile-v2.war /usr/local/tomcat/webapps/ROOT.war
+
+COPY --from=build_image /vprofile-project/target/vprofile-v2.war \
+     /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8080
+
 CMD ["catalina.sh", "run"]
