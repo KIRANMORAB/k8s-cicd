@@ -1,6 +1,9 @@
 name: vprofile-actions
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 env:
@@ -29,21 +32,22 @@ jobs:
       - name: Run Checkstyle
         run: mvn checkstyle:checkstyle
 
-      # =======================
-      # SONARCLOUD (DISABLED)
-      # =======================
+      # ==========================
+      # SONARCLOUD (COMMENTED)
+      # ==========================
       # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarcloud-github-action@master
       #   env:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   run: |
-      #     sonar-scanner \
-      #       -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
-      #       -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
-      #       -Dsonar.host.url=${{ secrets.SONAR_URL }} \
-      #       -Dsonar.login=${SONAR_TOKEN }}
-      #
+      #   with:
+      #     args: >
+      #       -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+      #       -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+      #       -Dsonar.host.url=${{ secrets.SONAR_URL }}
+
       # Reason:
-      # SonarCloud requires paid plan for private repos
+      # SonarCloud private repo requires paid plan.
+      # Enable this block once plan is upgraded.
 
   BUILD_AND_PUSH:
     name: Build & Push Docker Image to ECR
@@ -101,7 +105,7 @@ jobs:
           --region ${{ env.AWS_REGION }} \
           --name ${{ env.EKS_CLUSTER }}
 
-      - name: Create ECR Pull Secret (if not exists)
+      - name: Create / Update ECR Pull Secret
         run: |
           kubectl create secret docker-registry regcred \
           --docker-server=${{ secrets.REGISTRY }} \
@@ -119,9 +123,7 @@ jobs:
           chart-path: vprofilecharts
           namespace: default
           name: vprofile-stack
-          values: |
-            appimage=${{ secrets.REGISTRY }}/${{ env.ECR_REPOSITORY }}
-            apptag=${{ github.run_number }}
+          values: appimage=${{ secrets.REGISTRY }}/${{ env.ECR_REPOSITORY }},apptag=${{ github.run_number }}
 
   SLACK_NOTIFICATION:
     name: Slack Notification
