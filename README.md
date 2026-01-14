@@ -4,12 +4,6 @@ This repository contains the **CI/CD pipeline** for building, testing, scanning,
 
 ---
 
-## 🏗️ Architecture
-
-![Application CI/CD Architecture](docs/architecture.png)
-
----
-
 ## 🎥 Demo Video
 
 Watch the complete CI/CD pipeline execution and application deployment demo below:
@@ -19,6 +13,12 @@ Watch the complete CI/CD pipeline execution and application deployment demo belo
 This video demonstrates:
 - End-to-end CI/CD pipeline execution using GitHub Actions
 - Configured Ingress for deployed applications and resolved CNAME records in DNS to enable proper host routing
+
+---
+
+## 🏗️ Architecture
+
+![Application CI/CD Architecture](docs/architecture.png)
 
 ---
 
